@@ -8,6 +8,8 @@ import com.hosting.hosting.app.services.walletService.WalletService;
 
 import jakarta.validation.Valid;
 
+import java.util.ArrayList;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -39,6 +41,12 @@ public class HostingController {
     public Long getWalletBalance(@RequestAttribute String email) {
         return walletService.walletBalance(email) ;
     }
+
+    @GetMapping("/wallet/Transactions")
+    public ArrayList<ArrayList<String>> getTransactionHistory(@RequestAttribute String email) {
+        return walletService.transationHistory(email) ;
+    }
+
     
     
     
