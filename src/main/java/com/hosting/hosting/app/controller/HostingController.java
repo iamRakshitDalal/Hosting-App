@@ -12,8 +12,8 @@ import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -29,21 +29,26 @@ public class HostingController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestAttribute @Valid String email, @RequestAttribute String password) {
-        return ResponseEntity.ok( userService.login(email, password));
+    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+        User user =userService.login(email, password);
+        if(user == null){
+            return ResponseEntity.ok("Wrong Login Credential");
+        }
+        return ResponseEntity.ok(user);
     }
     @PostMapping("/register")
     public String register(@RequestBody @Valid User user) {
+        walletService.createWallet(user.getEmail());
         return userService.register(user) ;
     }
 
     @GetMapping("/wallet")
-    public Long getWalletBalance(@RequestAttribute String email) {
+    public Long getWalletBalance(@RequestParam String email) {
         return walletService.walletBalance(email) ;
     }
 
     @GetMapping("/wallet/Transactions")
-    public ArrayList<ArrayList<String>> getTransactionHistory(@RequestAttribute String email) {
+    public ArrayList<ArrayList<String>> getTransactionHistory(@RequestParam String email) {
         return walletService.transationHistory(email) ;
     }
 

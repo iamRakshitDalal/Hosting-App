@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
+import com.hosting.hosting.app.entities.WalletEntity;
 import com.hosting.hosting.app.repository.WalletRepository;
 
 @Service
@@ -20,6 +21,15 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public ArrayList<ArrayList<String>> transationHistory(String email) {
         return  walletRepository.findById(email).get().getTransactionHistory();
+    }
+    @Override
+    public void createWallet(String email) {
+        WalletEntity walletEntity= new WalletEntity();
+        walletEntity.setBalance(0);
+        walletEntity.setEmail(email);
+        walletEntity.setTransactionHistory(null);
+        walletRepository.save(walletEntity);
+        return;
     }
     
 }
