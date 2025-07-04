@@ -1,4 +1,4 @@
-package com.hosting.hosting.app.services;
+package com.hosting.hosting.app.services.userService;
 
 import com.hosting.hosting.app.model.User;
 
