@@ -2,13 +2,16 @@ package com.hosting.hosting.app.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hosting.hosting.app.model.Ticket;
 import com.hosting.hosting.app.model.User;
+import com.hosting.hosting.app.services.ticketService.TicketService;
 import com.hosting.hosting.app.services.userService.UserService;
 import com.hosting.hosting.app.services.walletService.WalletService;
 
 import jakarta.validation.Valid;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +26,11 @@ public class HostingController {
     
     private WalletService walletService;
     private UserService userService;
-    HostingController(UserService userService,WalletService walletService){
+    private TicketService ticketService;
+    HostingController(UserService userService,WalletService walletService,TicketService ticketService){
         this.userService = userService;
         this.walletService = walletService;
+        this.ticketService= ticketService;
     }
 
     @PostMapping("/login")
@@ -38,10 +43,9 @@ public class HostingController {
     }
     @PostMapping("/register")
     public String register(@RequestBody @Valid User user) {
-        walletService.createWallet(user.getEmail());
         return userService.register(user) ;
     }
-
+ 
     @GetMapping("/wallet")
     public Long getWalletBalance(@RequestParam String email) {
         return walletService.walletBalance(email) ;
@@ -52,7 +56,27 @@ public class HostingController {
         return walletService.transationHistory(email) ;
     }
 
+   /*  @PostMapping("/wallet/addmoney")                               x
+    public String addmoney() {
+        
+        
+        return "working";
+    } */
+
+    @PostMapping("/raiseTicket")
+    public String raiseTicket(@RequestBody Ticket ticket) {
+        return ticketService.raiseTicket(ticket);
+    } 
+
+    @GetMapping("/userTickets")
+    public List<Ticket> getMethodName(@RequestParam String email) {
+        return ticketService.readRaiseTicketByUser(email);
+    }
     
+    
+        
     
     
 }
+
+

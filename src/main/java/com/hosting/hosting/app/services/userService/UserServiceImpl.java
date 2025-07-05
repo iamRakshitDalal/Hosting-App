@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.hosting.hosting.app.entities.UserEntity;
 import com.hosting.hosting.app.model.User;
 import com.hosting.hosting.app.repository.UserRepository;
+import com.hosting.hosting.app.services.walletService.WalletService;
 
 
 
@@ -15,10 +16,10 @@ import com.hosting.hosting.app.repository.UserRepository;
 public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
-    
+    private WalletService walletService;
 
-    UserServiceImpl(UserRepository userRepository){
-        
+    UserServiceImpl(UserRepository userRepository,WalletService walletService ){
+        this.walletService = walletService;
         this.userRepository = userRepository;
     }
 
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService{
             BeanUtils.copyProperties(user,userEntity);
             userEntity.setPassword((user.getPassword()));
             userRepository.save(userEntity);
-            
+            walletService.createWallet(user.getEmail());
             return "Register Successfully";
         }
         return "User Already Exits";
