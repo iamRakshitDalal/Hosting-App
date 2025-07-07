@@ -17,4 +17,5 @@ public class Order {
     private Long sellingPrice;
     private Long price;
     private String renewTime;
+    
 }
