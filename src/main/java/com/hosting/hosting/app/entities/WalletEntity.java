@@ -15,4 +15,5 @@ public class WalletEntity {
     private String email;
     private long balance;
     private ArrayList<ArrayList<String>> transactionHistory;
+        
 }

@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Cart {
     private String email;
-    private Map<String,List<String>> domianDetails;
+    private String domianName;
+    private float domainPricePerYear;
+    private int rentForTime;
 }

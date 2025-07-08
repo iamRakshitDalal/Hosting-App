@@ -45,6 +45,8 @@ public class UserServiceImpl implements UserService{
         if(!optional.isPresent()){
             UserEntity userEntity =new UserEntity();
             BeanUtils.copyProperties(user,userEntity);
+
+            //Create Encoder here
             userEntity.setPassword((user.getPassword()));
             userRepository.save(userEntity);
             walletService.createWallet(user.getEmail());
@@ -52,5 +54,51 @@ public class UserServiceImpl implements UserService{
         }
         return "User Already Exits";
     }
+
+
+    @Override
+    public String upateUser(User user) {
+       Optional<UserEntity> optional = userRepository.findByEmail(user.getEmail());
+        if(optional.isPresent()){
+            UserEntity userEntity =new UserEntity();
+            BeanUtils.copyProperties(user,userEntity);
+
+            //Create Encoder here
+            userEntity.setPassword((optional.get().getPassword()));
+            userRepository.save(userEntity);
+            return "Update Successfully";
+        }
+        return "User Not Found";
+    }
+
+
+    @Override
+    public String deleteUser(String email) {
+        Optional<UserEntity> optional = userRepository.findByEmail(email);
+        if(optional.isPresent()){
+            userRepository.delete(optional.get());
+            return "Update Successfully";
+        }
+        return "User Not Found";
+
+    }
+
+
+    @Override
+    public String UpdatePassword(String email, String password) {
+        Optional<UserEntity> optional = userRepository.findByEmail(email);
+        if(optional.isPresent()){
+             UserEntity userEntity =optional.get();
+            if(password.equals(userEntity.getPassword())){
+                return "Please enter new password";
+            }
+
+            //Create Encoder here
+            userEntity.setPassword(password);
+            userRepository.save(userEntity);
+            return "Update Successfully";
+        }
+        return "User Not Found";
+    }    
     
 }

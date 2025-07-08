@@ -26,11 +26,11 @@ public class HostingController {
     
     private WalletService walletService;
     private UserService userService;
-    private TicketService ticketService;
+    
     HostingController(UserService userService,WalletService walletService,TicketService ticketService){
         this.userService = userService;
         this.walletService = walletService;
-        this.ticketService= ticketService;
+        
     }
 
     @PostMapping("/login")
@@ -63,15 +63,7 @@ public class HostingController {
         return "working";
     } */
 
-    @PostMapping("/raiseTicket")
-    public String raiseTicket(@RequestBody Ticket ticket) {
-        return ticketService.raiseTicket(ticket);
-    } 
-
-    @GetMapping("/userTickets")
-    public List<Ticket> getMethodName(@RequestParam String email) {
-        return ticketService.readRaiseTicketByUser(email);
-    }
+    
     
     
         

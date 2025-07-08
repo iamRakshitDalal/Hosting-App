@@ -1,6 +1,5 @@
 package com.hosting.hosting.app.services.orderService;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -14,10 +13,9 @@ import com.hosting.hosting.app.repository.OrderRepository;
 
 public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
-    private CartRepository cartRepository;
+    
     
     OrderServiceImpl(OrderRepository orderRepository,CartRepository cartRepository){
-        this.cartRepository = cartRepository;
         this.orderRepository = orderRepository;
     }
 
