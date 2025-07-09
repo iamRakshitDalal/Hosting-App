@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchDomianDetail {
-    private domainName
-    private 
-    private 
-    private 
+    private String domainName;
+    private boolean available;
+    private float price;
 }
