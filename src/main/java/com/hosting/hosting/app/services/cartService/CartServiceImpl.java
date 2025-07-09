@@ -26,6 +26,8 @@ public class CartServiceImpl implements CartService {
             lst.add(cart.getDomainPricePerYear()+"");
             lst.add(cart.getRentForTime()+"");
             domainDetails.put(cart.getDomianName(),lst);
+            cartEntity.setDomianDetails(domainDetails);
+            cartRepository.save(cartEntity);
             return "Done";
         }
         return "Not Found";
@@ -34,21 +36,35 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public ArrayList<Cart> readCartProduct(String email) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readCartProduct'");
+    public List<Cart> readCartProduct(String email) {
+        Optional<CartEntity> optional = cartRepository.findByEmail(email);
+        if(optional.isPresent()){
+            CartEntity cartEntity = optional.get();
+            List<Cart> lst = new ArrayList<>();
+            for(Map.Entry<String,List<String>> i : cartEntity.getDomianDetails().entrySet()){
+               lst.add(new Cart(email,i.getKey(),Float.parseFloat(i.getValue().get(0)),Integer.parseInt(i.getValue().get(1))));
+            }
+            return lst;
+        }
+        return null;
+        
     }
 
-    @Override
-    public String cartUpdateProduct(Cart cart) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'cartUpdateProduct'");
-    }
+    
 
     @Override
     public String deleteCart(Cart cart) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteCart'");
+        Optional<CartEntity> optional = cartRepository.findByEmail(cart.getEmail());
+        if(optional.isPresent()){
+            CartEntity cartEntity = optional.get();
+            Map<String,List<String>> domainDetails = cartEntity.getDomianDetails();
+            domainDetails.remove(cart.getDomianName());
+            cartEntity.setDomianDetails(domainDetails);
+            cartRepository.save(cartEntity);
+            return "Done";
+        }
+        return "Not Found";
+        
     }
     
 }
