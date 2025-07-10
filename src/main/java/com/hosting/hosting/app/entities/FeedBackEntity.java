@@ -1,31 +1,27 @@
 package com.hosting.hosting.app.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-
-@Data
-@Table(name = "Tickets")
 @Entity
-public class TicketEntity {
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class FeedBackEntity {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String email;
     private String name;
-    private long mobileNumber;
-    private String domainName;
-    private LocalDateTime dateOfTicketRaise;
-    private String status; 
-    private ArrayList<String> message;
-    
+    private String email;
+    private LocalDateTime dateTime;
+    private String title;
+    private String description;
 }

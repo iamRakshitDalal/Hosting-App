@@ -1,5 +1,9 @@
 package com.hosting.hosting.app.services.orderService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -19,60 +23,67 @@ public class OrderServiceImpl implements OrderService {
         this.orderRepository = orderRepository;
     }
 
-    @Override
-    public Cart readCartData(String email) {
-        Optional<CartEntity> optional = cartRepository.findByEmail(email);
+   @Override
+    public String addOrder(Order order) {
+        Optional<OrderEntity> optional = orderRepository.findByEmail(order.getEmail());
         if(optional.isPresent()){
-            CartEntity cartEntity = optional.get();
-            Cart cart = new Cart();
-            BeanUtils.copyProperties(cartEntity,cart);
-            return cart;
+            OrderEntity  orderEntity = optional.get();
+            Map<String,List<String>> domainDetails = orderEntity.getDomainDetails();
+            List<String> lst = new ArrayList<>();
+            lst.add(order.getPricePerYear()+"");
+            lst.add(order.getExpireDate().toString());
+            lst.add(order.getRenewPeriod().toString());
+            domainDetails.put(order.getDomainName(),lst);
+            orderEntity.setDomainDetails(domainDetails);
+            orderRepository.save(orderEntity);
+            return "Done";
         }
-        return null;
-    }
-    @Override
-    public void postCartDetail(Cart cart){
-        CartEntity cartEntity = new CartEntity();
-        BeanUtils.copyProperties(cart,cartEntity);
-        cartRepository.save(cartEntity);
-        
-    }
+        return "Not Found";
+    } 
+    
  
     @Override
-    public Order readOrdersData(String email) {
+    public List<Order> readOrdersData(String email) {
         Optional<OrderEntity> optional = orderRepository.findByEmail(email);
         if(optional.isPresent()){
             OrderEntity  orderEntity = optional.get();
-            Order order = new Order();
-            BeanUtils.copyProperties(orderEntity,order);
-            return order;
+            List<Order> lst = new ArrayList<>();
+            for(Map.Entry<String,List<String>> i : orderEntity.getDomainDetails().entrySet()){
+               lst.add(updateDomainDetails(new Order(
+                email,
+                i.getKey(),
+                Float.parseFloat(i.getValue().get(0)),
+                LocalDate.parse(i.getValue().get(1)),
+                LocalDate.parse(i.getValue().get(2))
+                )));
+            }
+            return lst;
         }
         return null;
     }
 
-    @Override
-    public void postOrderDetail(Order order) {
-        OrderEntity  orderEntity  = new OrderEntity();
-        BeanUtils.copyProperties(order,orderEntity);
-        orderRepository.save(orderEntity);
-    }
+    
 
     @Override
     public void deleteOrder(Order order) {
-         Optional<OrderEntity> optional = orderRepository.findById(order.getOrderId());
+        Optional<OrderEntity> optional = orderRepository.findByEmail(order.getEmail());
         if(optional.isPresent()){
             OrderEntity  orderEntity = optional.get();
-            orderRepository.delete(orderEntity);
+            orderEntity.getDomainDetails().remove(order.getDomainName());
+            orderRepository.save(orderEntity);
         }
-    }       
+    }
+
     @Override
-    public void deleteCart(Cart cart) {
-        Optional<CartEntity> optional = cartRepository.findByEmail(cart.getEmail());
-        if(optional.isPresent()){
-            CartEntity cartEntity = optional.get();
-            cartRepository.delete(cartEntity);
-        }
-    } 
+    public Order updateDomainDetails(Order order) {
+        return order;
+    }
+
+
+
+
+          
+ 
 
     
 }

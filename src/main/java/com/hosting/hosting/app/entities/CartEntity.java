@@ -16,5 +16,5 @@ import lombok.NoArgsConstructor;
 public class CartEntity {
     @Id
     private String email;
-    private Map<String,List<String>> domianDetails;
+    private Map<String,List<String>> domainDetails;
 }

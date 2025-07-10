@@ -21,12 +21,12 @@ public class CartServiceImpl implements CartService {
         Optional<CartEntity> optional = cartRepository.findByEmail(cart.getEmail());
         if(optional.isPresent()){
             CartEntity cartEntity = optional.get();
-            Map<String,List<String>> domainDetails = cartEntity.getDomianDetails();
+            Map<String,List<String>> domainDetails = cartEntity.getDomainDetails();
             List<String> lst = new ArrayList<>();
             lst.add(cart.getDomainPricePerYear()+"");
             lst.add(cart.getRentForTime()+"");
             domainDetails.put(cart.getDomianName(),lst);
-            cartEntity.setDomianDetails(domainDetails);
+            cartEntity.setDomainDetails(domainDetails);
             cartRepository.save(cartEntity);
             return "Done";
         }
@@ -41,8 +41,8 @@ public class CartServiceImpl implements CartService {
         if(optional.isPresent()){
             CartEntity cartEntity = optional.get();
             List<Cart> lst = new ArrayList<>();
-            for(Map.Entry<String,List<String>> i : cartEntity.getDomianDetails().entrySet()){
-               lst.add(new Cart(email,i.getKey(),Float.parseFloat(i.getValue().get(0)),Integer.parseInt(i.getValue().get(1))));
+            for(Map.Entry<String,List<String>> i : cartEntity.getDomainDetails().entrySet()){
+               lst.add(updateDomainDetails(new Cart(email,i.getKey(),Float.parseFloat(i.getValue().get(0)),Integer.parseInt(i.getValue().get(1)))));
             }
             return lst;
         }
@@ -57,14 +57,19 @@ public class CartServiceImpl implements CartService {
         Optional<CartEntity> optional = cartRepository.findByEmail(cart.getEmail());
         if(optional.isPresent()){
             CartEntity cartEntity = optional.get();
-            Map<String,List<String>> domainDetails = cartEntity.getDomianDetails();
-            domainDetails.remove(cart.getDomianName());
-            cartEntity.setDomianDetails(domainDetails);
+            cartEntity.getDomainDetails().remove(cart.getDomianName());
             cartRepository.save(cartEntity);
             return "Done";
         }
         return "Not Found";
         
     }
+
+    @Override
+    public Cart updateDomainDetails(Cart cart) {
+        return cart;
+    }
+
+    
     
 }

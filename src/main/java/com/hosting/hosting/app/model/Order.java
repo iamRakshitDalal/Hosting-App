@@ -1,6 +1,6 @@
 package com.hosting.hosting.app.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,12 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
-    private String orderId;
     private String email;
-    private String domainName;    
-    private LocalDateTime ExpireDate;
-    private Long sellingPrice;
-    private Long price;
-    private String renewTime;
+    private String domainName;  
+    private float pricePerYear;  
+    private LocalDate ExpireDate;
+    private LocalDate renewPeriod;
+    
     
 }

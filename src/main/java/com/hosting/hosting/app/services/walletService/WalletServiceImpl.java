@@ -1,10 +1,12 @@
 package com.hosting.hosting.app.services.walletService;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.hosting.hosting.app.entities.WalletEntity;
+import com.hosting.hosting.app.model.Wallet;
 import com.hosting.hosting.app.repository.WalletRepository;
 
 @Service
@@ -14,14 +16,20 @@ public class WalletServiceImpl implements WalletService {
     WalletServiceImpl(WalletRepository walletRepository){
         this.walletRepository = walletRepository;
     }
+
+     
     @Override
     public Long walletBalance(String email) {
         return  walletRepository.findById(email).get().getBalance();
     }
+
+
     @Override
     public ArrayList<ArrayList<String>> transationHistory(String email) {
         return  walletRepository.findById(email).get().getTransactionHistory();
     }
+
+
     @Override
     public void createWallet(String email) {
         WalletEntity walletEntity= new WalletEntity();
@@ -31,5 +39,17 @@ public class WalletServiceImpl implements WalletService {
         walletRepository.save(walletEntity);
         return;
     }
+
+    @Override
+    public Long updateWalletBalance(Wallet wallet) {
+        Optional<WalletEntity> optional = walletRepository.findById(wallet.getEmail());
+        if(optional.isPresent()){
+            WalletEntity walletEntity = optional.get();
+            walletEntity.setBalance(wallet.getBalance()+wallet.getBalance());
+            walletEntity.setTransactionHistory(walletEntity.getTransactionHistory().put(wallet.getDomainName(), null));
+        }
+        return null;
+    }
+
     
 }

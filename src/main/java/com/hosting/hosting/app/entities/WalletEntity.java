@@ -1,6 +1,7 @@
 package com.hosting.hosting.app.entities;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,7 +14,7 @@ import lombok.Data;
 public class WalletEntity {
     @Id
     private String email;
-    private long balance;
-    private ArrayList<ArrayList<String>> transactionHistory;
+    private Float balance;
+    private Map<String,ArrayList<String>> transactionHistory;
         
 }

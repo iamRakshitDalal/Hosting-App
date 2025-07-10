@@ -15,8 +15,8 @@ public class SearchServiceImpl implements SearchService{
     }
     @Override
     public Cart fetchDomaindata(String domainName) {
-        String url="";
-        ResponseEntity<> responce = restTemplate.getForEntity(null, null);
+        String url=String.format("https://api.whoisfreaks.com/v1.0/domain/availability?apiKey=%s&domain=%s&sug=true&count=10",apiKey,domainName);
+        ResponseEntity<> responce = restTemplate.getForEntity(url, null);
         if(responce.getStatusCode().is2xxSuccessful(){
             return 
         })
@@ -29,11 +29,12 @@ public class SearchServiceImpl implements SearchService{
     }
     @Override
     public Cart checkDomainDetails(String domainName) {
-       String url="";
+       /* String url="";
         ResponseEntity<> responce = restTemplate.getForEntity(null, null);
         if(responce.getStatusCode().is2xxSuccessful(){
             return 
-        })
+        }) */
+       return null;
     }
 
     
