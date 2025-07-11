@@ -2,7 +2,7 @@ package com.hosting.hosting.app.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hosting.hosting.app.model.Ticket;
+
 import com.hosting.hosting.app.model.User;
 import com.hosting.hosting.app.services.ticketService.TicketService;
 import com.hosting.hosting.app.services.userService.UserService;
@@ -47,7 +47,7 @@ public class HostingController {
     }
  
     @GetMapping("/wallet")
-    public Long getWalletBalance(@RequestParam String email) {
+    public Float getWalletBalance(@RequestParam String email) {
         return walletService.walletBalance(email) ;
     }
 

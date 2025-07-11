@@ -1,6 +1,6 @@
 package com.hosting.hosting.app.services.walletService;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -19,13 +19,13 @@ public class WalletServiceImpl implements WalletService {
 
      
     @Override
-    public Long walletBalance(String email) {
+    public Float walletBalance(String email) {
         return  walletRepository.findById(email).get().getBalance();
     }
 
 
     @Override
-    public ArrayList<ArrayList<String>> transationHistory(String email) {
+    public List<List<String>> transationHistory(String email) {
         return  walletRepository.findById(email).get().getTransactionHistory();
     }
 

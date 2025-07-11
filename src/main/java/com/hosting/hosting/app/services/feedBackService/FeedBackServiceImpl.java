@@ -1,12 +1,13 @@
 package com.hosting.hosting.app.services.feedBackService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 
 import com.hosting.hosting.app.entities.FeedBackEntity;
 import com.hosting.hosting.app.model.FeedBack;
 import com.hosting.hosting.app.repository.FeedBackRepository;
-
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
 
 public class FeedBackServiceImpl implements FeedBackService {
 
@@ -20,13 +21,15 @@ public class FeedBackServiceImpl implements FeedBackService {
         FeedBackEntity feedBackEntity = new FeedBackEntity();
         BeanUtils.copyProperties(FeedBack, feedBackEntity);
         feedBackRepository.save(feedBackEntity);
-        return "Thank you for Your Valuable Feedback";
+        return "Thank you for Your Valueable Feedback";
     }
 
     @Override
-    public FeedBack readFeedBack() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readFeedBack'");
+    public List<FeedBack> readFeedBack() {
+        
+        List<FeedBackEntity> lstEntities = feedBackRepository.findAll();
+        List<FeedBack> lst = lstEntities.stream().map(feedback -> new FeedBack(feedback.getId(),feedback.getName(),feedback.getEmail(),feedback.getDateTime(),feedback.getTitle(),feedback.getDescription())).toList();
+        return lst;
     }
     
 }
