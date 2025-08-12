@@ -1,14 +1,22 @@
-package com.hosting.hosting.app.model;
+package com.hosting.hosting.app.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+@Entity 
+@Data 
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-   
+@Table(name = "User")
+public class UserEntity {
+
+    
+    
+    @Id
     private String username; 
     private String email;
     private String name; 
@@ -20,6 +28,3 @@ public class User {
     private String country;
     private long mobileNumber;
 }
-
-
-

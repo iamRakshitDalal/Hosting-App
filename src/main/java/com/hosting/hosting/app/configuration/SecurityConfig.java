@@ -1,54 +1,58 @@
 package com.hosting.hosting.app.configuration;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.hosting.hosting.app.utils.AuthEntryPointJwt;
-import com.hosting.hosting.app.utils.AuthTokenFilter;
-
-import jakarta.servlet.Filter;
+import com.hosting.hosting.app.filter.JwtFilter;
+import com.hosting.hosting.app.service.user.UserDetailServicesImpl;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private UserDetailServicesImpl userDetailServices;
     
-    private AuthEntryPointJwt unAuthorizedHandler;
+    @Autowired
+    private JwtFilter jwtFilter;
 
-    SecurityConfig(AuthEntryPointJwt unAuthorizedHandler){
-        this.unAuthorizedHandler = unAuthorizedHandler;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    
+
+    @Bean 
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+        return authenticationConfiguration.getAuthenticationManager();
+    } 
+   
+    @Autowired
+    public void authenticatUser(AuthenticationManagerBuilder auth) throws Exception{
+        auth.userDetailsService(userDetailServices).passwordEncoder(passwordEncoder);
     }
+     
     @Bean
-    SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception{
-        http.csrf(csrf ->csrf.disable()).authorizeHttpRequests((requests) -> requests
-        .requestMatchers("/login").permitAll()
-        .anyRequest().authenticated()
-        ).addFilterBefore((Filter) authenticationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class)
-        .sessionManagement(session -> session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS))
-
-        .headers(headers -> headers.frameOptions(frameOptions -> frameOptions
-                        .sameOrigin()))
-        .exceptionHandling(exception -> exception.authenticationEntryPoint((AuthenticationEntryPoint) unAuthorizedHandler));;
-        return http.build();
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+        return http.authorizeHttpRequests(request -> request
+            .requestMatchers("/public/**").permitAll()
+            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .anyRequest().authenticated())
+        .csrf(AbstractHttpConfigurer::disable)
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .build();
     }
+   
+   
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
-    }
 }

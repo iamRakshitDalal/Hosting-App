@@ -1,0 +1,6 @@
+spring:
+    application:
+        name: hosting-app
+    profiles:
+        active: dev
+
